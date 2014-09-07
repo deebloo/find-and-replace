@@ -14,9 +14,9 @@
     "find",
     "and",
     "replace",
-    "find",
-    "and",
-    "replace"
+    "regex",
+    "replace text",
+    "find and replace"
   ],
   "author": "Danny Blue <dannybluedesign@gmail.com> (http://dannybluedesign.com/)",
   "license": "ISC",
