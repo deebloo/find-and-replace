@@ -7,7 +7,7 @@ Values to be replaced should be book ended with %%.
 
 ## Installation
   ```TXT
-  npm install replace-temp-values --save
+  npm install find-and-replace --save
   ```
 
 ## Usage
