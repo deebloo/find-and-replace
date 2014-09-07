@@ -1,0 +1,27 @@
+{
+  "name": "find-and-replace",
+  "version": "0.0.0",
+  "description": "find and replace in file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DannyBlueDesign/find-and-replace.git"
+  },
+  "keywords": [
+    "find",
+    "and",
+    "replace",
+    "find",
+    "and",
+    "replace"
+  ],
+  "author": "Danny Blue <dannybluedesign@gmail.com> (http://dannybluedesign.com/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DannyBlueDesign/find-and-replace/issues"
+  },
+  "homepage": "https://github.com/DannyBlueDesign/find-and-replace"
+}

@@ -1,4 +1,4 @@
-Replace Template Values
+Find and Replace
 =========
 
 A tiny module for replacing template values in a file.
@@ -23,7 +23,7 @@ Values to be replaced should be book ended with %%.
     
   app.js
   ```JS
-  var replace = require('replace-temp-values');
+  var replace = require('find-and-replace');
   
   var values = {'Heading': 'Good Morning San Diego!', 'Footer': 'Yaz Flute'};
   
