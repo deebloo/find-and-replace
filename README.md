@@ -27,7 +27,7 @@ Values to be replaced should be book ended with %%.
   ```JS
   var replace = require('find-and-replace');
   
-  var values = {'Heading': 'Good Morning San Diego!', 'Footer': 'Yaz Flute'};
+  var values = {'%Heading%': 'Good Morning San Diego!', '%Footer%': 'Yaz Flute'};
   
   replace('myFile.txt', 'newFile.txt', values);
   ```
