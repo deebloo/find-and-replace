@@ -33,4 +33,4 @@ Values to be replaced should be book ended with %%.
   ```
   
 
-* 0.0.3
+* 0.0.4
