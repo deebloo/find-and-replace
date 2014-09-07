@@ -6,13 +6,13 @@ A tiny module for replacing template values in a file.
 Values to be replaced should be book ended with %%.
 
 ## Installation
-  ```TXT
+  ```
   npm install find-and-replace --save
   ```
 
 ## Usage
   myFile.txt
-  ```TXT
+  ```
   %Heading%
   
   Welcome to this months newsletter
