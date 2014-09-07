@@ -1,3 +1,5 @@
+[![NPM](https://nodei.co/npm/find-and-replace.png?compact=true)](https://nodei.co/npm/find-and-replace/)
+
 Find and Replace
 =========
 
