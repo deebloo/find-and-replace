@@ -5,7 +5,7 @@ Find and Replace
 
 A tiny module for replacing template values in a file.
 
-Values to be replaced should be book ended with %%.
+To overwrite the file set the source and destination to the same file
 
 ## Installation
   ```
