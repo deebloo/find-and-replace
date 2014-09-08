@@ -32,5 +32,14 @@ Values to be replaced should be book ended with %%.
   replace('myFile.txt', 'newFile.txt', values);
   ```
   
+  newFile.txt
+  ```
+  Good Morning San Diego!
+  
+  Welcome to this months newsletter
+  ...
+  
+  Yaz Flute
+  ```
 
 * 0.0.4
