@@ -42,4 +42,4 @@ Values to be replaced should be book ended with %%.
   Yaz Flute
   ```
 
-* 0.0.4
+* 0.0.5
