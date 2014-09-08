@@ -1,6 +1,6 @@
 {
   "name": "find-and-replace",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "find and replace in file",
   "main": "index.js",
   "scripts": {

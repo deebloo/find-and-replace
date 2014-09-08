@@ -42,4 +42,4 @@ To overwrite the file set the source and destination to the same file
   Yaz Flute
   ```
 
-* 0.0.5
+* 0.0.6
