@@ -10,7 +10,7 @@ var fs = require('fs');
 
 var src, dest, complete = [], error = [];
 
-module.exports = {
+var API = {
   /**
    * set the source file
    *
@@ -99,7 +99,10 @@ module.exports = {
       }
 
       fs.writeFile(dest || src, replaced, function(err) {
-        if(err) return _error(err);
+        if(err) {
+          err.message = 'Error writing to file';
+          return _error(err);
+        }
 
         return _complete();
       });
@@ -109,6 +112,15 @@ module.exports = {
   }
 };
 
+/**
+ * fire all complete methods.
+ *
+ * @memberof find-and-replace
+ *
+ * @return {number}
+ *
+ * @private
+ */
 function _complete() {
   if(!complete.length) {
     return 1;
@@ -121,6 +133,15 @@ function _complete() {
   return 1;
 }
 
+/**
+ * fire all error methods
+ *
+ * @memberof find-and-replace
+ *
+ * @return {number}
+ *
+ * @private
+ */
 function _error(err) {
   if(!error.length) {
     return 0;
@@ -132,3 +153,5 @@ function _error(err) {
 
   return 0;
 }
+
+module.exports = API;

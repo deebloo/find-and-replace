@@ -8,7 +8,7 @@ find
     '%Footer%': 'Goodbye World'
   })
   .complete(function () {
-    console.log('Finished!')
+    console.log('Finished!');
   })
   .error(function (err) {
     console.log(err);
