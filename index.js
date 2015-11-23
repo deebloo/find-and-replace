@@ -110,6 +110,10 @@ module.exports = {
 };
 
 function _complete() {
+  if(!complete.length) {
+    return 1;
+  }
+
   complete.forEach(function (fn) {
     fn();
   });
@@ -118,6 +122,10 @@ function _complete() {
 }
 
 function _error(err) {
+  if(!error.length) {
+    return 0;
+  }
+
   error.forEach(function (fn) {
     fn(err);
   });
