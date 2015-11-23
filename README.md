@@ -41,8 +41,8 @@ A simple api for finding and replacing values in a file/
     })
     // The good stuff. Replace a map of values
     .replace({
-      '%Heading%': 'Hello World',
-      '%Footer%': 'Goodbye World'
+      '%Heading%': 'Good Morning San Diego!',
+      '%Footer%': 'Let's all play Yaz Flute'
     });
   ```
   
