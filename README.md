@@ -25,6 +25,7 @@ A simple api for finding and replacing values in a file/
   ```JS
   var find = require('find-and-replace');
   
+  // Methods can be chained in any order
   find
     // the src file
     .src('./test.txt')
