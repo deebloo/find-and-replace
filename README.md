@@ -23,17 +23,17 @@ A simple api for finding and replacing values in a file/
     
   app.js
   ```JS
-  var find = require('find-and-replace');
+  var find = require("find-and-replace");
   
   // Methods can be chained in any order
   find
     // the src file
-    .src('./test.txt')
+    .src("./test.txt")
     // the destination file. (if not set writes to the src file)
-    .dest('./test2.txt')
+    .dest("./test2.txt")
     // add a success callback
     .success(function () {
-      console.log('Success!')
+      console.log("Success!")
     })
     // add an error callback
     .error(function (err) {
@@ -41,8 +41,8 @@ A simple api for finding and replacing values in a file/
     })
     // The good stuff. Replace a map of values
     .replace({
-      '%Heading%': 'Good Morning San Diego!',
-      '%Footer%': 'Let's all play Yaz Flute'
+      "%Heading%": "Good Morning San Diego!",
+      "%Footer%": "Let's all play Yaz Flute"
     });
   ```
   
