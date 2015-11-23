@@ -8,7 +8,7 @@
  */
 var fs = require('fs');
 
-var src, dest, success = [], error = [];
+var src, dest, complete = [], error = [];
 
 module.exports = {
   /**
@@ -46,8 +46,8 @@ module.exports = {
    *
    * @return {exports}
    */
-  success: function (fn) {
-    success.push(fn);
+  complete: function (fn) {
+    complete.push(fn);
     return this;
   },
   /**
@@ -77,46 +77,50 @@ module.exports = {
 
     fs.readFile(src, function(err, data) {
       if(err) {
-        error.forEach(function (fn) {
-          fn(err);
-        });
-
-        return 0;
+        err.message = 'Could not find source file';
+        return _error(err);
       }
 
       var replaced = data.toString();
 
       for(var key in map) {
         if(map.hasOwnProperty(key)) {
-
           regex = new RegExp(key, 'g');
 
           if(replaced.indexOf(key) > -1) {
             replaced = replaced.replace(regex, map[key]);
           }
           else {
-            return console.log('Template Value ' + key + ' is not found');
+            _error({message:
+              'Could not find ' + key + ' in file.'
+            })
           }
         }
       }
 
       fs.writeFile(dest || src, replaced, function(err) {
-        if(err) {
-          error.forEach(function (fn) {
-            fn(err);
-          });
+        if(err) return _error(err);
 
-          return 0;
-        }
-
-        success.forEach(function (fn) {
-          fn();
-        });
-
-        return 1;
+        return _complete();
       });
     });
 
     return this;
   }
 };
+
+function _complete() {
+  complete.forEach(function (fn) {
+    fn();
+  });
+
+  return 1;
+}
+
+function _error(err) {
+  error.forEach(function (fn) {
+    fn(err);
+  });
+
+  return 0;
+}

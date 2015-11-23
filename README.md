@@ -3,7 +3,7 @@
 Find and Replace
 =========
 
-A simple api for finding and replacing values in a file/
+A simple api for finding and replacing values in a file.
 
 ## Installation
   ```
@@ -23,25 +23,26 @@ A simple api for finding and replacing values in a file/
     
   app.js
   ```JS
-  var find = require('find-and-replace');
+  var find = require("find-and-replace");
   
+  // Methods can be chained in any order
   find
     // the src file
-    .src('./test.txt')
+    .src("./test.txt")
     // the destination file. (if not set writes to the src file)
-    .dest('./test2.txt')
-    // add a success callback
-    .success(function () {
-      console.log('Success!')
+    .dest("./test2.txt")
+    // The good stuff. Replace a map of values
+    .replace({
+      "%Heading%": "Good Morning San Diego!",
+      "%Footer%": "Let's all play Yaz Flute"
+    })
+    // is fired when replacing is complete
+    .complete(function () {
+      console.log("Success!")
     })
     // add an error callback
     .error(function (err) {
       console.log(err);
-    })
-    // The good stuff. Replace a map of values
-    .replace({
-      '%Heading%': 'Hello World',
-      '%Footer%': 'Goodbye World'
     });
   ```
   
