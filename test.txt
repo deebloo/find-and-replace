@@ -1,0 +1,6 @@
+%Heading%
+
+Welcome to this months newsletter
+...
+
+%Footer%

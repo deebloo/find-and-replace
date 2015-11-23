@@ -1,43 +1,122 @@
+/**
+ * @name find-and-replace
+ *
+ * @description
+ * a simple api for finding and replacing values in a file
+ *
+ * @type {exports|module.exports}
+ */
 var fs = require('fs');
 
-module.exports = findAndReplace;
+var src, dest, success = [], error = [];
 
-/**
- * @name  Find and Replace
- *
- * @param {string} file - the path the file
- * @param {string} dest - where to send the file
- * @param {object} values - object with the variable to be replaced and its replacement
- * @param {function} callback
- */
-function findAndReplace(file, dest, values, callback) {
-  var regex;
+module.exports = {
+  /**
+   * set the source file
+   *
+   * @memberof find-and-replace
+   *
+   * @param {string} val
+   *
+   * @return {exports}
+   */
+  src: function(val) {
+    src = val;
+    return this;
+  },
+  /**
+   * set the destination file. if not destination is set write to the src.
+   *
+   * @memberof find-and-replace
+   *
+   * @param {string} val
+   *
+   * @return {exports}
+   */
+  dest: function (val) {
+    dest = val;
+    return this;
+  },
+  /**
+   * add an on success method
+   *
+   * @memberof find-and-replace
+   *
+   * @param {function} fn - success callback
+   *
+   * @return {exports}
+   */
+  success: function (fn) {
+    success.push(fn);
+    return this;
+  },
+  /**
+   * and an on error message
+   *
+   * @memberof find-and-replace
+   *
+   * @param {function} fn - error callback
+   *
+   * @return {exports}
+   */
+  error: function (fn) {
+    error.push(fn);
+    return this;
+  },
+  /**
+   * The good stuff! Find and replace the values from the file.
+   *
+   * @memberof find-and-replace
+   *
+   * @param {object} map
+   *
+   * @return {exports}
+   */
+  replace: function (map) {
+    var regex;
 
-  fs.readFile(file, function(err, data) {
-    if(err) throw err;
+    fs.readFile(src, function(err, data) {
+      if(err) {
+        error.forEach(function (fn) {
+          fn(err);
+        });
 
-    var replaced = data.toString();
+        return 0;
+      }
 
-    for(var key in values) {
-      if(values.hasOwnProperty(key)) {
+      var replaced = data.toString();
 
-        regex = new RegExp(key, 'g');
+      for(var key in map) {
+        if(map.hasOwnProperty(key)) {
 
-        if(replaced.indexOf(key) > -1) {
-          replaced = replaced.replace(regex, values[key]);
-        }
-        else {
-          return console.log('Template Value ' + key + ' is not found');
+          regex = new RegExp(key, 'g');
+
+          if(replaced.indexOf(key) > -1) {
+            replaced = replaced.replace(regex, map[key]);
+          }
+          else {
+            return console.log('Template Value ' + key + ' is not found');
+          }
         }
       }
-    }
 
-    fs.writeFile(dest, replaced, function(err) {
-      if(err) throw err;
+      fs.writeFile(dest || src, replaced, function(err) {
+        if(err) {
+          error.forEach(function (fn) {
+            fn(err);
+          });
 
-      if(callback) callback();
+          return 0;
+        }
 
-      return 1;
+        success.forEach(function (fn) {
+          fn();
+        });
+
+        return 1;
+      });
     });
-  });
-}
+
+    return this;
+  }
+};

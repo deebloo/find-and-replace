@@ -3,9 +3,7 @@
 Find and Replace
 =========
 
-A tiny module for replacing template values in a file.
-
-To overwrite the file set the source and destination to the same file
+A simple api for finding and replacing values in a file/
 
 ## Installation
   ```
@@ -25,11 +23,26 @@ To overwrite the file set the source and destination to the same file
     
   app.js
   ```JS
-  var replace = require('find-and-replace');
+  var find = require('find-and-replace');
   
-  var values = {'%Heading%': 'Good Morning San Diego!', '%Footer%': 'Yaz Flute'};
-  
-  replace('myFile.txt', 'newFile.txt', values);
+  find
+    // the src file
+    .src('./test.txt')
+    // the destination file. (if not set writes to the src file)
+    .dest('./test2.txt')
+    // add a success callback
+    .success(function () {
+      console.log('Success!')
+    })
+    // add an error callback
+    .error(function (err) {
+      console.log(err);
+    })
+    // The good stuff. Replace a map of values
+    .replace({
+      '%Heading%': 'Hello World',
+      '%Footer%': 'Goodbye World'
+    });
   ```
   
   newFile.txt
@@ -42,4 +55,4 @@ To overwrite the file set the source and destination to the same file
   Yaz Flute
   ```
 
-* 0.0.6
+* 1.0.0

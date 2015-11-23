@@ -1,6 +1,6 @@
 {
   "name": "find-and-replace",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "find and replace in file",
   "main": "index.js",
   "scripts": {
@@ -18,8 +18,8 @@
     "replace text",
     "find and replace"
   ],
-  "author": "Danny Blue <dannybluedesign@gmail.com> (http://dannybluedesign.com/)",
-  "license": "ISC",
+  "author": "deebloo",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/DannyBlueDesign/find-and-replace/issues"
   },
