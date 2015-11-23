@@ -36,9 +36,9 @@ A simple api for finding and replacing values in a file.
       "%Heading%": "Good Morning San Diego!",
       "%Footer%": "Let's all play Yaz Flute"
     })
-    // is fired when replacing is complete
+    // fires when find and replace is finished
     .complete(function () {
-      console.log("Success!")
+      console.log("Finished!")
     })
     // add an error callback
     .error(function (err) {
