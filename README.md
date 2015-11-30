@@ -10,18 +10,7 @@ A simple api for finding and replacing values in a file.
   npm install find-and-replace --save
   ```
 
-## Usage
-  myFile.txt
-  ```
-  %Heading%
-  
-  Welcome to this months newsletter
-  ...
-  
-  %Footer%
-  ```
-    
-  app.js
+## API
   ```JS
   var find = require("find-and-replace");
   
@@ -29,7 +18,7 @@ A simple api for finding and replacing values in a file.
   find
     // Source file
     .src("./test.txt")
-    // the destination file.
+    // the destination file to write to.
     .dest("./test2.txt")
     // Raw text
     .text("%Heading% This is some sample text. %Footer%")
@@ -46,16 +35,6 @@ A simple api for finding and replacing values in a file.
     .error(function (err) {
       console.log(err);
     });
-  ```
-  
-  newFile.txt
-  ```
-  Good Morning San Diego!
-  
-  Welcome to this months newsletter
-  ...
-  
-  Yaz Flute
   ```
 
 * 1.0.0
