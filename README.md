@@ -27,18 +27,20 @@ A simple api for finding and replacing values in a file.
   
   // Methods can be chained in any order
   find
-    // the src file
+    // Source file
     .src("./test.txt")
-    // the destination file. (if not set writes to the src file)
+    // the destination file.
     .dest("./test2.txt")
+    // Raw text
+    .text("%Heading% This is some sample text. %Footer%")
     // The good stuff. Replace a map of values
     .replace({
       "%Heading%": "Good Morning San Diego!",
       "%Footer%": "Let's all play Yaz Flute"
     })
-    // fires when find and replace is finished
-    .complete(function () {
-      console.log("Finished!")
+    // fires when find and replace is finished and gives you the replaced text from either the file or the raw text
+    .complete(function (txt) {
+      console.log("Finished! Here is the completed text: " + txt);
     })
     // add an error callback
     .error(function (err) {

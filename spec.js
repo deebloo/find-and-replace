@@ -1,8 +1,9 @@
 var find = require('./index');
 
 find
-  .src('./test.txt')
+  .src('./sdfsdf.txt')
   .dest('./test2.txt')
+  .text('Hello World')
   .replace({
     '%Heading%': 'Hello World',
     '%Footer%': 'Goodbye World'

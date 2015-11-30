@@ -3,13 +3,23 @@
  *
  * @description
  * a simple api for finding and replacing values in a file
- *
- * @type {exports|module.exports}
  */
-var fs = require('fs');
 
-var src, dest, complete = [], error = [];
+var fs;
 
+try {
+  fs = require('fs');
+} catch(err) {
+  fs = false;
+}
+
+var src, txt, dest, complete = [], error = [];
+
+/**
+ * Publicly accessible API
+ *
+ * @type {{src: Function, text: Function, dest: Function, complete: Function, error: Function, replace: Function}}
+ */
 var API = {
   /**
    * set the source file
@@ -18,10 +28,21 @@ var API = {
    *
    * @param {string} val
    *
-   * @return {exports}
+   * @return {API}
    */
-  src: function(val) {
+  src: function (val) {
     src = val;
+    return this;
+  },
+  /**
+   * A string value to use.
+   *
+   * @param {string} val - a block of text to find and replaced in.
+   *
+   * @return {API}
+   */
+  text: function (val) {
+    txt = val;
     return this;
   },
   /**
@@ -31,7 +52,7 @@ var API = {
    *
    * @param {string} val
    *
-   * @return {exports}
+   * @return {API}
    */
   dest: function (val) {
     dest = val;
@@ -44,7 +65,7 @@ var API = {
    *
    * @param {function} fn - success callback
    *
-   * @return {exports}
+   * @return {API}
    */
   complete: function (fn) {
     complete.push(fn);
@@ -57,7 +78,7 @@ var API = {
    *
    * @param {function} fn - error callback
    *
-   * @return {exports}
+   * @return {API}
    */
   error: function (fn) {
     error.push(fn);
@@ -70,64 +91,83 @@ var API = {
    *
    * @param {object} map
    *
-   * @return {exports}
+   * @return {API}
    */
   replace: function (map) {
-    var regex;
+    if(txt) {
+      _complete(_replace(txt, map));
+    }
 
-    fs.readFile(src, function(err, data) {
-      if(err) {
-        err.message = 'Could not find source file';
-        return _error(err);
-      }
+    if(src && fs) {
+      fs.readFile(src, function(err, data) {
+        if(err) return _error(err.message = 'Could not find source file');
 
-      var replaced = data.toString();
+        var replacedText = _replace(data.toString(), map);
 
-      for(var key in map) {
-        if(map.hasOwnProperty(key)) {
-          regex = new RegExp(key, 'g');
+        if(dest) {
+          fs.writeFile(dest || src, replacedText, function (err) {
+            if(err) return _error(err.message = 'Error writing to file');
 
-          if(replaced.indexOf(key) > -1) {
-            replaced = replaced.replace(regex, map[key]);
-          }
-          else {
-            _error({message:
-              'Could not find ' + key + ' in file.'
-            })
-          }
+            _complete(replacedText);
+          });
         }
-      }
-
-      fs.writeFile(dest || src, replaced, function(err) {
-        if(err) {
-          err.message = 'Error writing to file';
-          return _error(err);
+        else {
+          _complete(replacedText);
         }
-
-        return _complete();
       });
-    });
+    }
 
     return this;
   }
 };
 
 /**
+ * replace the text inout with values found in the map object
+ *
+ * @param {string} text - the text to replaced
+ * @param {object} map - the map of values to replace in the string
+ *
+ * @return {string}
+ *
+ * @private
+ */
+function _replace(text, map) {
+  var regex;
+
+  for(var key in map) {
+    if(map.hasOwnProperty(key)) {
+      regex = new RegExp(key, 'g');
+
+      if(text.indexOf(key) > -1) {
+        text = text.replace(regex, map[key]);
+      }
+      else {
+        _error({
+          message: 'Could not find ' + key + ' in file.'
+        });
+      }
+    }
+  }
+
+  return text;
+}
+
+/**
  * fire all complete methods.
  *
  * @memberof find-and-replace
+ *
+ * @param {string} val - the completed replaced string
  *
  * @return {number}
  *
  * @private
  */
-function _complete() {
-  if(!complete.length) {
-    return 1;
-  }
+function _complete(val) {
+  if(!complete.length) return 1;
 
   complete.forEach(function (fn) {
-    fn();
+    fn(val);
   });
 
   return 1;
@@ -138,14 +178,14 @@ function _complete() {
  *
  * @memberof find-and-replace
  *
+ * @param {object} err - object containing error information
+ *
  * @return {number}
  *
  * @private
  */
 function _error(err) {
-  if(!error.length) {
-    return 0;
-  }
+  if(!error.length) return 0;
 
   error.forEach(function (fn) {
     fn(err);
