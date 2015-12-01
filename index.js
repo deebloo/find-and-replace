@@ -7,6 +7,7 @@
 
 var fs;
 
+// try to require the files system.
 try {
   fs = require('fs');
 } catch(err) {
@@ -95,7 +96,10 @@ var API = {
    */
   replace: function (map) {
     if(txt) {
-      _complete(_replace(txt, map));
+      // Timeout lets replace be called in any place in the chain.
+      setTimeout(function () {
+        _complete(_replace(txt, map));
+      }, 0);
     }
 
     if(src && fs) {
@@ -159,18 +163,12 @@ function _replace(text, map) {
  *
  * @param {string} val - the completed replaced string
  *
- * @return {number}
+ * @return {string}
  *
  * @private
  */
 function _complete(val) {
-  if(!complete.length) return 1;
-
-  complete.forEach(function (fn) {
-    fn(val);
-  });
-
-  return 1;
+  return _resolve(complete, val);
 }
 
 /**
@@ -180,18 +178,32 @@ function _complete(val) {
  *
  * @param {object} err - object containing error information
  *
- * @return {number}
+ * @return {object}
  *
  * @private
  */
 function _error(err) {
-  if(!error.length) return 0;
+  return _resolve(error, err);
+}
 
-  error.forEach(function (fn) {
-    fn(err);
+/**
+ * resolve either success or error.
+ *
+ * @param {Array} methods - an array of methods to call
+ * @param {*} res - the value to pass to each method is the methods array
+ *
+ * @return {*}
+ *
+ * @private
+ */
+function _resolve(methods, res) {
+  if(!methods.length) return res;
+
+  methods.forEach(function (fn) {
+    fn(res);
   });
 
-  return 0;
+  return res;
 }
 
 module.exports = API;
