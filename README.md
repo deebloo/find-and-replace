@@ -20,7 +20,7 @@ find
   .dest('./test2.txt')
   .replace({
     '%Heading%': 'Good Morning San Diego!',
-    '%Footer%': 'Let's all play Yaz Flute'
+    '%Footer%': 'Let\'s all play Yaz Flute'
   })
   // fires when find and replace is finished and gives you the replaced text from either the file or the raw text
   .complete(function (txt) {
