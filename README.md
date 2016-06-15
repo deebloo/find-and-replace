@@ -12,7 +12,7 @@ A simple api for finding and replacing values in a file.
 
 ## API
   ```JS
-var find = require("find-and-replace");
+var find = require('find-and-replace');
 
 find
   .src('./test.txt')
