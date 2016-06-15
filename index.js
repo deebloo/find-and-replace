@@ -5,60 +5,20 @@
  * a simple api for finding and replacing values in a file
  */
 
-var fs;
+let fs;
 
 // try to require the files system.
 try {
   fs = require('fs');
-} catch(err) {
+} catch (err) {
   fs = false;
 }
-
-var src, txt, dest, complete = [], error = [];
-
 /**
  * Publicly accessible API
  *
  * @type {{src: Function, text: Function, dest: Function, complete: Function, error: Function, replace: Function}}
  */
 var API = {
-  /**
-   * set the source file
-   *
-   * @memberof find-and-replace
-   *
-   * @param {string} val
-   *
-   * @return {API}
-   */
-  src: function (val) {
-    src = val;
-    return this;
-  },
-  /**
-   * A string value to use.
-   *
-   * @param {string} val - a block of text to find and replaced in.
-   *
-   * @return {API}
-   */
-  text: function (val) {
-    txt = val;
-    return this;
-  },
-  /**
-   * set the destination file. if not destination is set write to the src.
-   *
-   * @memberof find-and-replace
-   *
-   * @param {string} val
-   *
-   * @return {API}
-   */
-  dest: function (val) {
-    dest = val;
-    return this;
-  },
   /**
    * add an on success method
    *
@@ -68,8 +28,8 @@ var API = {
    *
    * @return {API}
    */
-  complete: function (fn) {
-    complete.push(fn);
+  complete(fn) {
+    this.completeArr.push(fn);
     return this;
   },
   /**
@@ -81,8 +41,8 @@ var API = {
    *
    * @return {API}
    */
-  error: function (fn) {
-    error.push(fn);
+  error(fn) {
+    this.errorArr.push(fn);
     return this;
   },
   /**
@@ -94,29 +54,34 @@ var API = {
    *
    * @return {API}
    */
-  replace: function (map) {
-    if(txt) {
+  replace(map) {
+    var replacedText;
+
+    if (this.txt) {
       // Timeout lets replace be called in any place in the chain.
-      setTimeout(function () {
-        _complete(_replace(txt, map));
+      setTimeout(() => {
+        replacedTest = _replace(this.txt, map);
+
+        this.completeArr.forEach(fn => fn(replacedTest));
       }, 0);
-    }
+    } else if (this.srcFile && fs) {
+      fs.readFile(this.srcFile, (err, data) => {
+        if (err) {
+          return this.errorArr.forEach(fn => fn(err.message = 'Could not find source file'));
+        }
 
-    if(src && fs) {
-      fs.readFile(src, function(err, data) {
-        if(err) return _error(err.message = 'Could not find source file');
+        replacedText = _replace(data.toString(), map);
 
-        var replacedText = _replace(data.toString(), map);
+        if (this.dest) {
+          fs.writeFile(this.dest || this.srcFile, replacedText, err => {
+            if (err) return _error(err.message = 'Error writing to file');
 
-        if(dest) {
-          fs.writeFile(dest || src, replacedText, function (err) {
-            if(err) return _error(err.message = 'Error writing to file');
-
-            _complete(replacedText);
+            this.completeArr.forEach(fn => fn(replacedText));
           });
         }
+
         else {
-          _complete(replacedText);
+          this.completeArr.forEach(fn => fn(replacedTest));
         }
       });
     }
@@ -138,72 +103,53 @@ var API = {
 function _replace(text, map) {
   var regex;
 
-  for(var key in map) {
-    if(map.hasOwnProperty(key)) {
+  for (var key in map) {
+    if (map.hasOwnProperty(key)) {
       regex = new RegExp(key, 'g');
 
-      if(text.indexOf(key) > -1) {
-        text = text.replace(regex, map[key]);
-      }
-      else {
-        _error({
-          message: 'Could not find ' + key + ' in file.'
-        });
-      }
+      text = text.replace(regex, map[key]);
     }
   }
 
   return text;
 }
 
-/**
- * fire all complete methods.
- *
- * @memberof find-and-replace
- *
- * @param {string} val - the completed replaced string
- *
- * @return {string}
- *
- * @private
- */
-function _complete(val) {
-  return _resolve(complete, val);
+module.exports = {
+  /**
+   * Set a A filepath to use.
+   *
+   * @param {string} content - a block of text to find and replaced in.
+   *
+   * @return {API}
+   */
+  src: function (content) {
+    var api = Object.create(API);
+
+    api.dest = function (val) {
+      this.dest = val;
+      return this;
+    };
+
+    api.completeArr = [];
+    api.errorArr = [];
+    api.srcFile = content;
+
+    return api;
+  },
+  /**
+   * A string value to use.
+   *
+   * @param {string} val - a block of text to find and replaced in.
+   *
+   * @return {API}
+   */
+  text: function (val) {
+    var api = Object.create(API);
+
+    api.completeArr = [];
+    api.errorArr = [];
+    api.txt = val;
+
+    return api;
+  }
 }
-
-/**
- * fire all error methods
- *
- * @memberof find-and-replace
- *
- * @param {object} err - object containing error information
- *
- * @return {object}
- *
- * @private
- */
-function _error(err) {
-  return _resolve(error, err);
-}
-
-/**
- * resolve either success or error.
- *
- * @param {Array} methods - an array of methods to call
- * @param {*} res - the value to pass to each method is the methods array
- *
- * @return {*}
- *
- * @private
- */
-function _resolve(methods, res) {
-  if(!methods.length) return res;
-
-  methods.forEach(function (fn) {
-    fn(res);
-  });
-
-  return res;
-}
-
-module.exports = API;
